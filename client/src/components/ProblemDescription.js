@@ -5,20 +5,19 @@ import { useNavigate } from "react-router-dom";
 
 
 function ProblemDescription() {
-	let navigate = useNavigate(); 
-  const routeChange = () =>{ 
-    let path = `/submission`; 
-    navigate(path);
-  }
-	
+	let navigate = useNavigate();
+
+	const routeChange = () => {
+		let path = `/submission`;
+		navigate(path);
+	}
+
 	return (
-		<div className="h-screen text-white mt-4">
+		<div className="h-screen mt-4">
 
 			<div className="d-flex justify-content-between flex-md-row flex-column">
-				<div className=" problem grey rounded overflow-hidden ">
-					<ul
-						className="nav nav-tabs" id="myTab" role="tablist"
-					>
+				<div className="problem grey rounded overflow-hidden" style={{ margin: '0 45px' }}>
+					<ul className="nav nav-tabs">
 						<li className="nav-item" role="presentation">
 							<button
 								className="nav-link active"
@@ -29,34 +28,32 @@ function ProblemDescription() {
 								role="tab"
 								aria-controls="pills-home"
 								aria-selected="true"
-								
-								
 							>
-
 								Description
 							</button>
 						</li>
-						<li className="nav-item " role="presentation">
+						<li className="nav-item" role="presentation">
 							<button
 								className="nav-link active"
-								id="pills-home-tab"
+								id="pills-submissions-tab"
 								data-bs-toggle="pill"
-								data-bs-target="#pills-home"
+								data-bs-target="#pills-submissions"
 								type="button"
 								role="tab"
-								aria-controls="pills-home"
-								aria-selected="true"
-								onClick={() => {routeChange()}}
-								
+								aria-controls="pills-submissions"
+								aria-selected="false"
+								onClick={() => { routeChange() }}
+								style={{ marginLeft: '10px' }}
 							>
-
 								Submissions
 							</button>
 						</li>
 					</ul>
 				</div>
 			</div>
-            
+
+
+
 			<div className='flex px-0 py-4 h-[calc(100vh-94px)] overflow-y-auto'>
 				<div className='px-5'>
 
@@ -123,7 +120,7 @@ function ProblemDescription() {
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 	);
 };

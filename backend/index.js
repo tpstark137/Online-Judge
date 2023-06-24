@@ -3,7 +3,7 @@ const cors = require('cors');
 require('./db/config');
 const User = require('./db/User');
 const { generateFile } = require('./generateFile');
-const { executeCpp } = require('./executeCpp');
+const {executeCpp}=require('./executeCpp')
 
 const app = express();
 app.use(express.json());
@@ -49,7 +49,7 @@ app.post('/run', async (req, res) => {
 
         const filePath = await generateFile(language, code);
         const output = await executeCpp(filePath);
-        res.json({ filePath, output });
+        res.json({ filePath ,output});
     }
     catch (error) {
         res.status(500).json({ error: error });

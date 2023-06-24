@@ -5,6 +5,9 @@
 .h-screen {
 	height: 100vh;
 }
+.nav{
+	background-color: transparent;
+}
 
 .grey {
 	background-color: #383b40;

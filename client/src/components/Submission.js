@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import Box from '@mui/material/Box';
 
 import Modal from '@mui/material/Modal';
-import AceEditor from 'react-ace';
+//import AceEditor from 'react-ace';
 
 import './style.css'
-import "../../node_modules/ace-builds/src-min-noconflict/theme-tomorrow"
+//import "../../node_modules/ace-builds/src-min-noconflict/theme-tomorrow"
 
 const style = {
     position: 'absolute',
@@ -48,29 +48,28 @@ const Submission = () => {
 
 
                     <div className="border">
-                        <AceEditor
-                            placeholder="Placeholder Text"
-                            mode="javascript"
-                            disabled={true}
-                            theme="tomorrow"
+
+                        <textarea
                             value='#include<bits/stdc++.h> 
-                             using namespace std;
-                             int main(){
-                                cout<<"Hello World";
-                                return 0;
-                                }'
-                            height={450}
-                            width={"100%"}
+                        using namespace std;
+                        int main(){
+                           cout<<"Hello World";
+                           return 0;
+                           }'
+                            style={{
+                                height: 'calc(80vh - 200px)',
+                                width: '100%',
+                                fontFamily: 'Courier New, monospace',
+                                fontSize: '20px',
+                                padding: '10px',
+                                borderRadius: '5px',
+                                border: '1px solid #ccc',
+                                resize: 'vertical',
+                                backgroundColor: '#1e1e1e', // Set the background color
+                                color: '#dcdcdc', // Set the text color
+                            }}
+                        />
 
-                            fontSize={14}
-                            showPrintMargin={true}
-                            showGutter={true}
-                            highlightActiveLine={true}
-
-                            setOptions={{
-                                showLineNumbers: true,
-                                tabSize: 2,
-                            }} />
                     </div>
                     <button className='btn btn-secondary me-4 lightgreen border-0 mt-2' onClick={() => handleClose()}>Close</button>
 

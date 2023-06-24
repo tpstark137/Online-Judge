@@ -2,16 +2,14 @@ import React from 'react';
 import Split from 'react-split';
 import ProblemDescription from './ProblemDescription';
 import './style.css';
-import AceEditor from 'react-ace';
-import "../../node_modules/ace-builds/src-min-noconflict/theme-twilight";
+//import AceEditor from 'react-ace';
+//import "../../node_modules/ace-builds/src-min-noconflict/theme-twilight";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Workspace() {
   const [code, setCode] = React.useState("");
-  const change = (e) => {
-    setCode(e);
-  };
+  
   const handleClick = () => {
     console.log(code);
 
@@ -66,23 +64,26 @@ function Workspace() {
           </div>
 
           <div>
-            <AceEditor
-              placeholder="Enter your code here"
-              onChange={change}
-              height="calc(80vh - 200px)"
-              width="100%"
-              theme="twilight"
-              name="codingPandaEditor"
-              fontSize={20}
-              showPrintMargin={true}
-              showGutter={true}
-              highlightActiveLine={true}
-              editorProps={{ $blockScrolling: Infinity }}
-              setOptions={{
-                showLineNumbers: true,
-                tabSize: 2
-              }}
-            />
+          <textarea
+          placeholder="Enter your code here"
+          onChange={(e) => {
+            setCode(e.target.value);
+          }}
+          value={code}
+          style={{
+            height: 'calc(80vh - 200px)',
+            width: '100%',
+            fontFamily: 'Courier New, monospace',
+            fontSize: '20px',
+            padding: '10px',
+            borderRadius: '5px',
+            border: '1px solid #ccc',
+            resize: 'vertical',
+            backgroundColor: '#1e1e1e', // Set the background color
+            color: '#dcdcdc', // Set the text color
+          }}
+        />
+        
           </div>
 
           <div className="d-flex flex-column justify-content-center align-items-center p-3 result grey rounded overflow-hidden mt-3">
