@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import Split from 'react-split';
 import ProblemDescription from './ProblemDescription';
 import './style.css';
@@ -6,12 +6,26 @@ import './style.css';
 //import "../../node_modules/ace-builds/src-min-noconflict/theme-twilight";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 function Workspace() {
   const [code, setCode] = React.useState("");
+  const [output, setOutput] = useState("Output will be displayed here");
   
-  const handleClick = () => {
+  const handleClick = async() => {
     console.log(code);
+    const payload = {
+      language: 'cpp',
+      code
+    };
+
+    try {
+      const { data } = await axios.post('http://localhost:3000/run', payload);
+      console.log(data);
+      setOutput(data.output);
+    } catch (error) {
+      console.log(error.response);
+    }
 
     toast.success('Submitted Successfully 🎉🍾', {
       position: "top-right",
@@ -85,10 +99,12 @@ function Workspace() {
         />
         
           </div>
-
+          {
+           output && 
           <div className="d-flex flex-column justify-content-center align-items-center p-3 result grey rounded overflow-hidden mt-3">
-            <p>All Test Cases Passed</p>
+            <p>{output}</p>
           </div>
+          }
         </div>
       </div>
     </Split>

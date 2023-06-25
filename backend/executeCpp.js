@@ -28,4 +28,6 @@ const executeCpp = (filepath) => {
     });
 };
 
-module.exports = executeCpp;
+module.exports = {
+    executeCpp,
+};

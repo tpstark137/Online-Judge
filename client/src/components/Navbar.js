@@ -31,6 +31,9 @@ function Navbar() {
                             <li className="nav-item">
                                 <Link className="nav-link" to="/problemList">Problems List</Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/questions">Contribute Question</Link>
+                            </li>
                             {
 
                                 auth ?
