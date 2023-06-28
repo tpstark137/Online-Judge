@@ -16,7 +16,8 @@ function Workspace() {
     console.log(code);
     const payload = {
       language: 'cpp',
-      code
+      code,
+      output
     };
 
     try {

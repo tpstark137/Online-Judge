@@ -4,6 +4,7 @@ const app = express();
 require('./db/config');
 const User = require('./db/User');
 const Questions = require('./db/Questions');
+const Submission = require('./db/Submission');
 const { generateFile } = require('./generateFile');
 const { executeCpp } = require('./executeCpp');
 const cors  = require('cors');
@@ -56,6 +57,10 @@ app.post("/run", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error });
     }
+
+    let submission = new Submission(req.body);
+    let result = await submission.save();
+    res.send(result);
 });
 
 app.post("/questions", async (req, res) => {
