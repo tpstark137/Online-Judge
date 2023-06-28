@@ -3,7 +3,6 @@ const app = express();
 
 require('./db/config');
 const User = require('./db/User');
-
 const Questions = require('./db/Questions');
 const { generateFile } = require('./generateFile');
 const { executeCpp } = require('./executeCpp');

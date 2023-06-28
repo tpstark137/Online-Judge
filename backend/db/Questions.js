@@ -1,38 +1,13 @@
-const mongoose =require('mongoose')
+var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 
-const QuestionSchema = new mongoose.Schema({
-    id: {
-        type: String,
-        required: true
-    },
-    question: {
-        type: String,
-        required: true
-    },
-    input: {
-        type: String,
-        required: true
-    },
-    output: {
-        type: String,
-        required: true
-    },
-    difficulty: {
-        type: String,
-        required: true
-    },
-    topic: {
-        type: String,
-        required: true
-    },
-    explanation:{
-        type: String,
+var QuestionSchema = new Schema({
+  uniquename: { type: String, required: true, unique: true, max: 100 }, // auto generated based on title
+  sequence: { type: Number, required: true },
+  title: { type: String, required: true, max: 50 },
+  description: { type: String, required: true },
+  difficulty: { type: String}
+});
 
-    },
-    constraints: {
-        type: String,
-        required: true
-    }
-    
-})
-module.exports = mongoose.model('questions', QuestionSchema)
+
+module.exports = mongoose.model("questions", QuestionSchema);
