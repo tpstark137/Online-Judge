@@ -1,17 +1,10 @@
-// const express = require('express');
-// const cors = require('cors');
-// require('./db/config');
-// const User = require('./db/User');
-// const { generateFile } = require('./generateFile');
-// const {executeCpp}=require('./executeCpp')
-// const Questions = require('./db/Questions');
-
-// const app = express();
-// app.use(express.json());
-// app.use(cors());
-// app.use(express.urlencoded({ extended: true }));
 const express = require('express');
 const app = express();
+
+require('./db/config');
+const User = require('./db/User');
+
+const Questions = require('./db/Questions');
 const { generateFile } = require('./generateFile');
 const { executeCpp } = require('./executeCpp');
 const cors  = require('cors');

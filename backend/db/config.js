@@ -1,2 +1,9 @@
 const mongoose = require('mongoose');
-mongoose.connect("mongodb://0.0.0.0:27017/e-commerce")
+const DB = 'mongodb+srv://tpaulbe21:Tusshar@123@cluster0.pridcwk.mongodb.net/onlinejudge?retryWrites=true&w=majority';
+
+mongoose.connect(DB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log(`Connection done`)
+}).catch((e) => console.log("Error:", e));

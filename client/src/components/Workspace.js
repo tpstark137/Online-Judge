@@ -85,6 +85,8 @@ function Workspace() {
           }}
           value={code}
           style={{
+            fontStyle:"normal",
+            textDecoration:"none",
             height: 'calc(80vh - 200px)',
             width: '100%',
             fontFamily: 'Courier New, monospace',
@@ -99,9 +101,10 @@ function Workspace() {
         />
         
           </div>
+          <h5>Output:</h5>
           {
            output && 
-          <div className="d-flex flex-column justify-content-center align-items-center p-3 result grey rounded overflow-hidden mt-3">
+          <div className="outputbox align-items-center p-3 result grey rounded overflow-hidden mt-3">
             <p>{output}</p>
           </div>
           }

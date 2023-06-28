@@ -9,7 +9,7 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import Workspace from './components/Workspace';
 import Submission from './components/Submission';
-import PrivateComponent from './components/PrivateComponent';
+//import PrivateComponent from './components/PrivateComponent';
 import AddQuestions from './components/AddQuestions';
 
 
@@ -19,13 +19,13 @@ function App() {
      <BrowserRouter>
      <Navbar/>
     <Routes>
-    <Route element={<PrivateComponent/>} >
+     {/*<Route element={<PrivateComponent/>} > */}
     <Route path="/" element={<Home/>} />
     <Route path="/problemList" element={<ProblemList/>} />
     <Route path="/editor" element={<Workspace/>}/>
     <Route path="/submission" element={<Submission/>}/>
     <Route path="/questions" element={<AddQuestions/>}/>
-    </Route>
+    {/*</Route>*/}
 
     <Route path="/register" element={<SignUp/>} />
     <Route path="/login" element={<Login/>} />
