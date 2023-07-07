@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 
-const AddQuestions = () => {
+const AddQuestion = () => {
+
     const [Sequence,setSequence] = useState()
     const [title, setTitle] = useState("");
     const [description, setDesc] = useState("");
@@ -17,89 +18,72 @@ const AddQuestions = () => {
     const [data , setData ]= useState(EditorState.createEmpty())
     const [difficulty , setDif] = useState("Easy")
 
-    const onEditorStateChange=(editorState) => {
+    const onEditorStateChange = (editorState) => {
         setData(editorState)
-         setDesc(draftToHtml(convertToRaw(data.getCurrentContent())))
-      };
+        setDesc(draftToHtml(convertToRaw(data.getCurrentContent())))
+    };
 
-      const HandelTitile = (e)=>{
+    const HandelTitile = (e) => {
         const t = e.target.value;
         setTitle(t);
         let un = ""
-        for(let i =0 ;i < t.length ; i++)
-        {
-          if(t[i]===' ')
-          {
-            un+='-'
-          }
-          else
-          un+=t[i].toLowerCase()
+        for (let i = 0; i < t.length; i++) {
+            if (t[i] === ' ') {
+                un += '-'
+            }
+            else
+                un += t[i].toLowerCase()
         }
-  
+
         setUnique(un)
     }
-
-    const nav = useNavigate();
-    const handleClick = async ()=>{
+    const nav = useNavigate()
+    const handleClick = async () => {
 
         const data = {
-          uniquename:uniqueName,
-          sequence: Sequence,
-          title: title,
-          description: description,
-          difficulty: difficulty
+            sequence: Sequence,
+            title: title,
+            description: description,
+            uniquename: uniqueName,
+            difficulty: difficulty
         }
-      await axios.post('http://localhost:3000/questions',data).then((D)=>{
-      toast.success('Add Success', {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      });
-      nav('/')
-      }).catch((D)=>{
-      toast.error(D.response.data.errors, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      });
+        await axios.post('http://localhost:3000/questions', data).then((D) => {
+            toast.success('Add Success', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            nav('/')
+        }).catch((D) => {
+            toast.error(D.response.data.errors, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
         })
-      
-      }
+
+    }
     return (
         <div>
-            <div className="" style={{ backgroundColor: '#E3E4E4', color: "black" }} >
-                <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="light"
-                />
-                {/* Same as */}
-                <ToastContainer />
+            <div className="" style={{ backgroundColor: '#E3E4E4', color:"black" }} >
+            <ToastContainer />
                 <div className="d-flex flex-column py-3 align-items-center">
                     <div className="d-flex flex-column ml-3 w-50">
-                        <div className="d-flex flex-column align-items-center flex-lg-row  m-auto">
+                        <div className="d-flex flex-column align-items-center flex-lg-row align-items-lg-start m-auto">
                             <h2>Create New Question</h2>
                         </div>
                         <hr />
                         <div className="mb-3 col-lg-6">
-
                             <input
                                 value={Sequence} onChange={(e) => setSequence(e.target.value)}
                                 type="text"
@@ -107,7 +91,6 @@ const AddQuestions = () => {
                                 id="formGroupExampleInput"
                                 placeholder="Sequence"
                             />
-
                         </div>
 
                         <input
@@ -124,7 +107,6 @@ const AddQuestions = () => {
                             id="formGroupExampleInput"
                             disabled
                         />
-
                         <Editor
                             toolbarClassName="toolbarClassName"
                             wrapperClassName="bg-white demo-wrapper mt-2"
@@ -132,34 +114,22 @@ const AddQuestions = () => {
                             editorState={data}
                             onEditorStateChange={onEditorStateChange}
                         />
-                        <hr className="mt-5" />
-
                         Difficulty
-                        <select onChange={(e) => setDif(e.target.value)} class="form-select mt-2" aria-label="Default select example">
-                            <option selected value="Easy">Easy</option>
+                        <select onChange={(e) => setDif(e.target.value)} className="form-select" aria-label="Default select example">
+                            <option value="Easy">Easy</option>
                             <option value="Medium">Medium</option>
                             <option value="Hard">Hard</option>
                         </select>
 
-
                     </div>
 
-                    <button onClick={handleClick} class="btn btn-primary px-4 me-2 mt-5 mb-5">Sumbit</button>
-
-
-
-
-
-
-
+                    <button onClick={handleClick} className="btn btn-primary px-4 me-2 mb-5">Sumbit</button>
                 </div>
             </div>
 
         </div>
 
     )
-
-
 }
 
-export default AddQuestions;
+export default AddQuestion

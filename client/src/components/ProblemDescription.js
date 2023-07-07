@@ -1,127 +1,99 @@
 import React from "react";
 import "./style.css"
-import { useNavigate } from "react-router-dom";
+import {useParams } from "react-router-dom";
+import { getcode } from "../api/getCode";
+import { useState, useEffect } from "react";
+// import Submission from "./Submission";
 
 
 
 function ProblemDescription() {
-	let navigate = useNavigate();
+	const params = useParams()
+	// let navigate = useNavigate();
+	const [Q, setQ] = useState('')
+	useEffect(() => {
 
-	const routeChange = () => {
-		let path = `/submission`;
-		navigate(path);
-	}
+		getcode(params.uniquename).then((data) => {
+			setQ(data.Q)
+			document.getElementById("desc").innerHTML = data.Q.description
+		})
 
-	return (
-		<div className="h-screen mt-4">
+	})
 
-			<div className="d-flex justify-content-between flex-md-row flex-column">
-				<div className="problem grey rounded overflow-hidden" style={{ margin: '0 45px' }}>
-					<ul className="nav nav-tabs">
-						<li className="nav-item" role="presentation">
-							<button
-								className="nav-link active"
-								id="pills-home-tab"
-								data-bs-toggle="pill"
-								data-bs-target="#pills-home"
-								type="button"
-								role="tab"
-								aria-controls="pills-home"
-								aria-selected="true"
-							>
-								Description
-							</button>
-						</li>
-						<li className="nav-item" role="presentation">
-							<button
-								className="nav-link active"
-								id="pills-submissions-tab"
-								data-bs-toggle="pill"
-								data-bs-target="#pills-submissions"
-								type="button"
-								role="tab"
-								aria-controls="pills-submissions"
-								aria-selected="false"
-								onClick={() => { routeChange() }}
-								style={{ marginLeft: '10px' }}
-							>
-								Submissions
-							</button>
-						</li>
-					</ul>
+
+	 return (
+		<div>
+			<div className=" problem grey rounded overflow-hidden">
+			  <ul
+				className="nav nav-tabs" id="myTab" role="tablist"
+			  >
+				<li className="nav-item" role="presentation">
+				  <button
+					className="nav-link active"
+					id="pills-home-tab"
+					data-bs-toggle="pill"
+					data-bs-target="#pills-home"
+					type="button"
+					role="tab"
+					aria-controls="pills-home"
+					aria-selected="true"
+				  >
+					<i className="fa-solid fa-code me-2" />
+					Description
+				  </button>
+				</li>
+				<li className="nav-item" role="presentation">
+				  <button
+					className="nav-link"
+					id="pills-contact-tab"
+					data-bs-toggle="pill"
+					data-bs-target="#pills-contact"
+					type="button"
+					role="tab"
+					aria-controls="pills-contact"
+					aria-selected="false"
+				  >
+					<i className="fa-regular fa-clock me-2" />
+					Sumbmissions
+				  </button>
+				</li>
+			  </ul>
+			  <div className="tab-content" id="pills-tabContent">
+				<div
+				  className="tab-pane fade show active p-3 hh"
+				  id="pills-home"
+				  role="tabpanel"
+				  aria-labelledby="pills-home-tab"
+				  tabIndex={0}
+				>
+				  <div className="d-flex justify-content-between align-items-center">
+					<h5>{Q?Q.sequence+". "+Q.title:null}</h5>
+					
+				   {Q?<h5 className=" fw-semibold" style={{color:Q.difficulty==="Easy" ? 'green':Q.difficulty==="Medium"?'#F49D1A':"red"}}>{Q?Q.difficulty:null}</h5>:null}
+				  </div>
+				  <hr />
+				  <div id="desc">
+
+				  </div>
 				</div>
-			</div>
-
-
-
-			<div className='flex px-0 py-4 h-[calc(100vh-94px)] overflow-y-auto'>
-				<div className='px-5'>
-
-					<div className='w-full'>
-						<div className='flex space-x-4'>
-							<div className='flex-1 mr-2 text-lg text-white font-medium'>1. Two Sum</div>
-						</div>
-						<hr />
-
-						<div className='flex items-center mt-3'>
-							<div
-								className={` inline-block rounded-[21px] bg-opacity-[.15] px-2.5 py-1 text-xs font-medium capitalize `}
-							>
-								<p className="text-green">Easy</p>
-							</div>
-
-
-						</div>
-
-
-
-						<div className='text-white text-sm'>
-							<p>Given an array of integers <code>nums</code> and an <code>integer</code> target, return indices of the two numbers such that they add up to target.
-
-								You may assume that each input would have exactly one solution, and you may not use the same element twice.
-
-								You can return the answer in any order.</p>
-						</div>
-
-
-						<div className='mt-4'>
-
-							<div>
-								<p className='font-medium text-white '>Example 1: </p>
-
-								<div className='example-card'>
-									<pre>
-										<strong className='text-white'>Input: </strong>
-										<p className="text-white"><code>nums = [2,7,11,15], target = 9</code></p>
-										<br />
-										<strong className="text-white">Output:</strong>
-										<p><code>[0,1]</code></p>
-										<br />
-										<strong >Explanation:</strong>
-										<p><code>Because nums[0] + nums[1] == 9, we return [0, 1].</code></p>
-
-
-									</pre>
-								</div>
-							</div>
-
-						</div>
-
-
-						<div className='my-8 pb-4'>
-							<div className='text-white text-sm font-medium'>Constraints:</div>
-							<ul className='text-white ml-5 list-disc '>
-								<li> <code>nums.length==100</code></li>
-								<li> <code>a greater then 10</code></li>
-								<li> <code>b grater then 10</code></li>
-								<li> <code>ans lie between 100</code></li>
-							</ul>
-						</div>
-					</div>
+				<div
+				  className="tab-pane fade p-3 overflow-auto"
+				  id="pills-contact"
+				  role="tabpanel"
+				  aria-labelledby="pills-contact-tab"
+				  tabIndex={0}
+				>
+				<div className="overflow-auto">
+		
+				   
 				</div>
+				 
+				</div>
+			  </div>
 			</div>
-
-		</div>
-	);
+			
+		  </div>
+		
+	 );
 };
 export default ProblemDescription;

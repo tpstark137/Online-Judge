@@ -1,8 +1,18 @@
 import React from 'react'
-import Questions from './Questions.js'
 import './style.css'
+import { getQuestions } from '../api/getQuestions.js'
+import { useState,useEffect } from 'react';
 
 function ProblemList() {
+  const [Questions , setQ ]= useState([]);
+
+useEffect(()=>{
+
+getQuestions().then((data)=>{
+    setQ(data);
+})
+
+},[])
 
   return (
     <div className='container'>
@@ -22,9 +32,9 @@ function ProblemList() {
           {Questions.map((item) =>
             <tr>
               <td>{item.sequence}</td>
-              <td><a className='title' type='button' href='/editor'>{item.title}</a></td>
+              <td><a className='title' type='button' href={'/question/'+item.uniquename}>{item.title}</a></td>
               <td style={{ color: item.difficulty === 'Easy' ? 'green' : item.difficulty === 'Medium' ? '#FFC72C' : 'red' }}>{item.difficulty}</td>
-              <td style={{ color: item.status === 'Solved' ? 'green' : item.status === 'Attempted' ? '#FFC72C' : '#818589' }}>{item.status}</td>
+              <td style={{ color: item.status === 'Solved' ? 'green' : item.status === 'Attempted' ? '#FFC72C' : '#818589' }}>UnAttempted</td>
 
             </tr>
 

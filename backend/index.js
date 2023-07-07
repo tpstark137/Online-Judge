@@ -6,7 +6,9 @@ const User = require('./db/User');
 const { generateFile } = require('./generateFile');
 const { executeCpp } = require('./executeCpp');
 const {create_question,question_all,GetOne} = require('./controllers/Questions')
-const {submission_run , getSubmitionAll} = require('./controllers/Submition')
+const UserCode = require('./routes/UserCode')
+// const {submission_run , getSubmitionAll} = require('./controllers/Submition')
+const {TestModel} = require('./db/TestModel')
 const cors  = require('cors');
 
 //middlewares
@@ -68,11 +70,13 @@ app.post("/run", async (req, res) => {
 //     let result=await question.save();
 //     res.send(result);
 // });
+
 app.post("/questions",create_question) // Create 
 app.get("/questions",question_all) // GetAll
 app.get("/questions/:id",GetOne) 
-app.post("/submition",submission_run);
-app.get('/submition/:filter',getSubmitionAll )
+// app.post("/submition",submission_run);
+// app.get('/submition/:filter',getSubmitionAll )
+app.use(UserCode)
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000');

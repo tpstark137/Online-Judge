@@ -22,7 +22,7 @@ function App() {
      <Route element={<PrivateComponent/>}>
     <Route path="/" element={<Home/>} />
     <Route path="/problemList" element={<ProblemList/>} />
-    <Route path="/editor" element={<Workspace/>}/>
+    <Route path="/question/:uniquename" element={<Workspace/>}/>
     <Route path="/submission" element={<Submission/>}/>
     <Route path="/questions" element={<AddQuestions/>}/>
     </Route>
