@@ -8,13 +8,20 @@ if (!fs.existsSync(outputPath)) {
     fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const executeCpp = (filepath) => {
+const executeCpp = async(filepath,input) => {
     const jobId = path.basename(filepath).split(".")[0];
     const outPath = path.join(outputPath, `${jobId}.exe`);
+    console.log(input)
+    const inp=path.join(outputPath,'/input.txt');
+    // console,log(input)
+    
+     fs.writeFileSync(inp,input);
+    
 
     return new Promise((resolve, reject) => {
+        
         exec(
-            `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.exe`,
+            `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.exe <${inp}`,
             (error, stdout, stderr) => {
                 if (error) {
                     reject({ error, stderr });

@@ -8,7 +8,7 @@ const { executeCpp } = require('./executeCpp');
 const {create_question,question_all,GetOne} = require('./controllers/Questions')
 const UserCode = require('./routes/UserCode')
 // const {submission_run , getSubmitionAll} = require('./controllers/Submition')
-const {TestModel} = require('./db/TestModel')
+const TestModel=require('./db/TestModel')
 const cors  = require('cors');
 
 //middlewares
@@ -44,18 +44,31 @@ app.post('/login', async (req, res) => {
 
 
 });
+app.post("/submit",async(req,res)=>{
+    let user = new TestModel(req.body);
+    await user.save();
+    res.send("Success")
+})
 app.post("/run", async (req, res) => {
     // const language = req.body.language;
     // const code = req.body.code;
 
-    const { language = 'cpp', code } = req.body;
+    const { language = 'cpp', code,input} = req.body;
     if (code === undefined) {
         return res.status(404).json({ success: false, error: "Empty code!" });
     }
+    let user = await TestModel.findOne({id:"sumer"})
+    console.log(user.output)
     try {
         const filePath = await generateFile(language, code);
-        const output = await executeCpp(filePath);
-        res.json({ filePath, output });
+        const output = await executeCpp(filePath,input);
+        if(user.output==output)
+        {
+            res.json("Success");
+        }
+        else{
+        res.json("Wrong Answer");
+        }
     } catch (error) {
         res.status(500).json({ error: error });
     }

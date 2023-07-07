@@ -2,5 +2,8 @@
 using namespace std;
 int main()
 {
-cout<<"Code";
+    int n,m;
+    cin>>n>>m;
+     cout<<n+m;
+
 }
