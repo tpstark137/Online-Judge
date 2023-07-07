@@ -18,7 +18,7 @@ function Home() {
                 Beat the challenge faster than your opponent using your ❤ language</p>
             <button onClick={() => nav('/problemList')} className='btn btn-danger mb-5'>Go To Problems List</button>
         </div>
-        <Footer />
+        <Footer/>
         </>
     )
 }
