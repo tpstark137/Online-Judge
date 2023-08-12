@@ -1,28 +1,27 @@
-import React,{useState} from "react";
-import { Editor } from "react-draft-wysiwyg";
+import React, { useState } from "react";
 import '../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import 'draft-js/dist/Draft.css';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { EditorState, convertToRaw } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
+import Editor from "./Editor";
+import 'react-quill/dist/quill.snow.css';
+
 
 const AddQuestion = () => {
 
-    const [Sequence,setSequence] = useState()
+    const [Sequence, setSequence] = useState()
     const [title, setTitle] = useState("");
     const [description, setDesc] = useState("");
-    const [uniqueName , setUnique]  = useState("")
-    const [data , setData ]= useState(EditorState.createEmpty())
-    const [difficulty , setDif] = useState("Easy")
+    const [uniqueName, setUnique] = useState("")
+    const [difficulty, setDif] = useState("Easy")
+    const [tags, setTags] = useState("")
+    const [constraints, setConstraints] = useState("")
+    const [input, setInput] = useState("")
+    const [output, setOutput] = useState("")
 
-    const onEditorStateChange = (editorState) => {
-        setData(editorState)
-        setDesc(draftToHtml(convertToRaw(data.getCurrentContent())))
-    };
-
+    const onChange = (value) => {
+        setDesc(value)
+    }
     const HandelTitile = (e) => {
         const t = e.target.value;
         setTitle(t);
@@ -45,38 +44,22 @@ const AddQuestion = () => {
             title: title,
             description: description,
             uniquename: uniqueName,
-            difficulty: difficulty
+            difficulty: difficulty,
+            tag: tags,
+            constraints: constraints,
+            input: input,
+            output: output
         }
         await axios.post('http://localhost:3000/questions', data).then((D) => {
-            toast.success('Add Success', {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
             nav('/')
         }).catch((D) => {
-            toast.error(D.response.data.errors, {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-        })
+            console.log(D)
+        });
 
     }
     return (
         <div>
-            <div className="" style={{ backgroundColor: '#E3E4E4', color:"black" }} >
-            <ToastContainer />
+            <div className="" style={{ backgroundColor: '#E3E4E4', color: "black" }} >
                 <div className="d-flex flex-column py-3 align-items-center">
                     <div className="d-flex flex-column ml-3 w-50">
                         <div className="d-flex flex-column align-items-center flex-lg-row align-items-lg-start m-auto">
@@ -107,13 +90,41 @@ const AddQuestion = () => {
                             id="formGroupExampleInput"
                             disabled
                         />
-                        <Editor
-                            toolbarClassName="toolbarClassName"
-                            wrapperClassName="bg-white demo-wrapper mt-2"
-                            editorClassName="demo-editor"
-                            editorState={data}
-                            onEditorStateChange={onEditorStateChange}
+                        <input
+                            value={tags} onChange={(e) => setTags(e.target.value)}
+                            type="text"
+                            className="form-control mt-2 "
+                            id="formGroupExampleInput"
+                            placeholder="Tags"
                         />
+                        <input
+                            value={constraints} onChange={(e) => setConstraints(e.target.value)}
+                            type="text"
+                            className="form-control mt-2 "
+                            id="formGroupExampleInput"
+                            placeholder="Constraints"
+                        />
+                        <input
+                            value={input} onChange={(e) => setInput(e.target.value)}
+                            type="text"
+                            className="form-control mt-2 "
+                            id="formGroupExampleInput"
+                            placeholder="Input"
+                        />
+                        <input
+                            value={output} onChange={(e) => setOutput(e.target.value)}
+                            type="text"
+                            className="form-control mt-2 "
+                            id="formGroupExampleInput"
+                            placeholder="Output"
+                        />
+                        <div className="mb-3 mt-3 bg-white ">
+                            <Editor
+                                value={description}
+                                onChange={onChange}
+                            />
+                        </div>
+
                         Difficulty
                         <select onChange={(e) => setDif(e.target.value)} className="form-select" aria-label="Default select example">
                             <option value="Easy">Easy</option>

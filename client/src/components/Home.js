@@ -1,8 +1,6 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 import './style.css'
-import Footer from './Footer';
-
 function Home() {
     const nav = useNavigate()
     return (
@@ -18,7 +16,6 @@ function Home() {
                 Beat the challenge faster than your opponent using your ❤ language</p>
             <button onClick={() => nav('/problemList')} className='btn btn-danger mb-5'>Go To Problems List</button>
         </div>
-        <Footer/>
         </>
     )
 }

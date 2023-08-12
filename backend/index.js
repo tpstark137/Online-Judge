@@ -1,96 +1,155 @@
 const express = require('express');
 const app = express();
-
 require('./db/config');
-const User = require('./db/User');
+const User = require('./db/model/User');
 const { generateFile } = require('./generateFile');
 const { executeCpp } = require('./executeCpp');
-const {create_question,question_all,GetOne} = require('./controllers/Questions')
-const UserCode = require('./routes/UserCode')
-// const {submission_run , getSubmitionAll} = require('./controllers/Submition')
-const TestModel=require('./db/TestModel')
-const cors  = require('cors');
+const { create_question, question_all, GetOne } = require('./controllers/Questions')
+const Submission = require('./db/model/Submission');
+const TestModel = require('./db/TestModel')
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+require('dotenv').config()
 
 //middlewares
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
+
+const salt = bcrypt.genSaltSync(10);
+const secret = 'asdfe45we45w345wegw345werjktjwertkj';
+
 
 app.post('/register', async (req, res) => {
-    let user = new User(req.body);
-    let result = await user.save();
-    result = result.toObject();
-    delete result.password;
-    res.send(result);
-    console.log("User Registered Successfully")
+  const { username, email, password, cpassword, userid } = req.body;
+  if (!username || !email || !password || !cpassword || !userid) {
+    return res.status(422).json({ error: "You are Missing some of the fields" });
+  }
 
-});
-app.post('/login', async (req, res) => {
-    if (req.body.password && req.body.email) {
-
-        let user = await User.findOne(req.body).select('-password');
-        if (user) {
-            res.send(user);
-            console.log("User Logged in Successfully")
-        }
-        else {
-            res.status(401).send({ message: "No User Found" });
-        }
-
+  try {
+    const userEmail = await User.findOne({ email: email });
+    const Usersid = await User.findOne({ userid: userid });
+    if (userEmail) {
+      return res.status(409).json({ error: "Email already Exists" });
+    } else if (Usersid) {
+      return res.status(406).json({ error: "This UserID is not available" });
+    } else if (password != cpassword) {
+      return res.status(400).json({ error: "Passwords are not matching" });
     }
     else {
-        res.status(401).send({ message: "No User Found" });
+      const userD = await User.create({
+        username,
+        email,
+        password: bcrypt.hashSync(password, salt),
+        userid,
+      })
+      res.status(201).json(userD)
     }
-
+  }
+  catch (err) {
+    console.log(err)
+  }
+  console.log("Success")
+})
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(422).json("Missing some of the fields");
+  }
+  try {
+    const userDoc = await User.findOne({ email });
+    const passOk = bcrypt.compareSync(password, userDoc.password);
+    if (passOk) {
+      jwt.sign({ email, id: userDoc._id }, secret, {}, (err, token) => {
+        if (err) throw err;
+        res.cookie('token', token).json({
+          id: userDoc._id,
+          email,
+          token: token,
+          message: "Logged in Successfully"
+        });
+      });
+    } else {
+      res.status(400).json('wrong credentials');
+    }
+  }
+  catch (err) {
+    console.log(err);
+  }
 
 });
-app.post("/submit",async(req,res)=>{
-    let user = new TestModel(req.body);
-    await user.save();
-    res.send("Success")
+app.post("/submit", async (req, res) => {
+  let user = new TestModel(req.body);
+  await user.save();
+  res.send("Success")
 })
 app.post("/run", async (req, res) => {
-    // const language = req.body.language;
-    // const code = req.body.code;
+  const { language, code, input } = req.body;
+  if (code === undefined) {
+    return res.status(404).json({ success: false, error: "Empty code!" });
+  }
+  try {
+    const filePath = await generateFile(language, code);
+    const output = await executeCpp(language, filePath, input);
 
-    const { language = 'cpp', code,input} = req.body;
-    if (code === undefined) {
-        return res.status(404).json({ success: false, error: "Empty code!" });
-    }
-    let user = await TestModel.findOne({id:"sumer"})
-    console.log(user.output)
-    try {
-        const filePath = await generateFile(language, code);
-        const output = await executeCpp(filePath,input);
-        if(user.output==output)
-        {
-            res.json("Success");
-        }
-        else{
-        res.json("Wrong Answer");
-        }
-    } catch (error) {
-        res.status(500).json({ error: error });
+    res.json({ filePath, output });
+
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+});
+app.post("/questions", create_question) // Create 
+app.get("/questions", question_all) // GetAll
+app.get("/questions/:id", GetOne)
+
+
+app.post("/addsubmission", async (req, res) => {
+  const { questionname, lang, code, verdict, userid } = req.body;
+
+  if (!code) {
+    return res.status(422).json({ error: "Write some code" });
+  }
+
+  try {
+    const submission = {
+      lang,
+      code,
+      userid,
+      verdict,
+    };
+
+    const existingSubmission = await Submission.findOne({ questionname });
+    if (existingSubmission) {
+      existingSubmission.submissions.push(submission);
+      await existingSubmission.save();
+    } else {
+      const newSubmission = new Submission({
+        questionname,
+        submissions: [submission],
+      });
+      await newSubmission.save();
     }
 
-    // let submission = new Submission(req.body);
-    // let result = await submission.save();
-    // res.send(result);
+    res.status(201).json({ message: "Code Submitted Successfully" });
+  } catch (err) {
+    console.log(err);
+  }
+});
+app.get("/submissions/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const submission = await Submission.findOne({ questionname: id });
+
+    res.send(submission);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
-// app.post("/questions", async (req, res) => {
-//     let question=new Questions(req.body);
-//     let result=await question.save();
-//     res.send(result);
-// });
 
-app.post("/questions",create_question) // Create 
-app.get("/questions",question_all) // GetAll
-app.get("/questions/:id",GetOne) 
-// app.post("/submition",submission_run);
-// app.get('/submition/:filter',getSubmitionAll )
-app.use(UserCode)
-
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
 });

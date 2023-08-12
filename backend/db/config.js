@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const DB = 'mongodb+srv://tpaulbe21:Tusshar137@cluster0.pridcwk.mongodb.net/onlinejudge?retryWrites=true&w=majority';
+require('dotenv').config()
+const DB=process.env.DB_KEY;
 
 mongoose.connect(DB, {
   useNewUrlParser: true,

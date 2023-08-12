@@ -1,129 +1,193 @@
-import React, { useState,useEffect } from 'react'
-
+import React, { useState, useEffect} from "react";
+import { useParams } from "react-router-dom";
 import Box from '@mui/material/Box';
-
 import Modal from '@mui/material/Modal';
-//import AceEditor from 'react-ace';
-
-import './style.css'
-//import "../../node_modules/ace-builds/src-min-noconflict/theme-tomorrow"
-import { getSubmission } from '../api/getSubmission';
 
 const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 900,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 900,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
 };
-const user = JSON.parse(localStorage.getItem("user"));
-const Submission = (question) => {
-    const [open, setOpen] = useState(false);
-    const [item, setItem] = useState({})
 
-    const handleOpen = (item) => {
-        setItem(item)
-        setOpen(true);
+const Submissions = () => {
+  const params = useParams()
+
+  const [open, setOpen] = useState(false);
+  const [item, setItem] = useState({})
+  const [submission, setSubmission] = useState();
+
+  const callSubmissions = async () => {
+    try {
+      let res = await fetch('http://localhost:3000/submissions/' + params.uniquename, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json"
+        },
+      })
+
+      const submiData = await res.json();
+      setSubmission(submiData.submissions);
+
+      if (!res.status === 200) {
+        const error = new Error(res.error);
+        throw error;
+      }
+    } catch (error) {
+      console.log(error);
     }
-    const handleClose = () => setOpen(false);
+  };
 
-    const [submissions, setSubmitions] = useState([])
-    useEffect(() => {
+  const calculateAgoTime = (timeStamp) => {
+    const currentTime = Date.now();
+    const givenTime = new Date(timeStamp).getTime();
+    const timeDifference = currentTime - givenTime;
 
-        const data = {
-            token: user.name,
-            q: question.question
-        }
+    const seconds = Math.floor(timeDifference / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
 
-        getSubmission(data).then((data) => {
-            console.log(data)
-            setSubmitions(data)
-        }).catch((err) => {
-            console.log(err)
-        })
+    let agoMessage = "";
 
+    if (days > 0) {
+      agoMessage = `${days} day(s) ago`;
+    } else if (hours > 0) {
+      agoMessage = `${hours} hour(s) ago`;
+    } else if (minutes > 0) {
+      agoMessage = `${minutes} minute(s) ago`;
+    } else {
+      agoMessage = `${seconds} second(s) ago`;
+    }
 
-    })
+    return agoMessage;
+  };
 
-    return (
-        <div className='overflow-auto'>
-            <Modal
-                open={open}
-                onClose={handleClose}
+  useEffect(() => {
+    callSubmissions();
+  }, []);
+  const handleOpen = (item) => {
+    setItem(item)
+    setOpen(true);
+  }
+  const handleClose = () => setOpen(false);
 
-            >
-                <Box sx={style}>
+  
 
-                    <div className="d-flex overflow-auto mb-3 justify-content-between border-bottom border-secondary">
-                        <div>
-                            {item.status === "pass" ?
-                                <h6 className="text-success m-0 green">Accepted</h6>
-                                :
-                                <h6 className="text-danger m-0">Wrong Answer</h6>
-                            }
-                            <p className="text-secondary">{new Date(item.timesubmitted).toLocaleString()}</p>
-                        </div>
-                        <h6 className="text-primary ms-5 ps-5">{item.language}</h6>
-                        <h6 className="text-dark ms-5 ps-5">{item.runtime / 100 + "s"}</h6>
+  return (
+    <>
+      <section className="problemtable">
+        <Modal
+          open={open}
+          onClose={handleClose}
 
-                    </div>
-                    <i onClick={() => { navigator.clipboard.writeText(item.solution) }} class="fas fa-copy"></i>
-                    <div className="border">
+        >
+          <Box sx={style}>
 
-                        <textarea
-                            value={item.solution}
-                            style={{
-                                height: 'calc(80vh - 200px)',
-                                width: '100%',
-                                fontFamily: 'Courier New, monospace',
-                                fontSize: '20px',
-                                padding: '10px',
-                                borderRadius: '5px',
-                                border: '1px solid #ccc',
-                                resize: 'vertical',
-                                backgroundColor: '#1e1e1e', // Set the background color
-                                color: '#dcdcdc', // Set the text color
-                            }}
-                        />
-
-                    </div>
-                    <button className='btn btn-secondary me-4 lightgreen border-0 mt-2' onClick={() => handleClose()}>Close</button>
-
-                </Box>
-            </Modal>
-            <div className="overflow-auto">
-                {submissions.map((item) =>
-                    <>
-
-                        <div onClick={() => handleOpen(item)} className="d-flex justify-content-between mb-3 mt-1  border-bottom border-secondary hvr-bob hvr-shadow box">
-                            <div>
-                                {item.status === "pass" ?
-                                    <h6 className="text-success m-0 green">Accepted</h6>
-                                    :
-                                    <h6 className="text-danger m-0">Wrong Answer</h6>
-                                }
-                                <p className="text-secondary">{new Date(item.timesubmitted).toLocaleString()}</p>
-                            </div>
-                            <h6 className="text-primary ms-5 ps-5">{item.language}</h6>
-                            <h6 className="text-white ms-5 ps-5">{item.runtime / 100 + "S"}</h6>
-                        </div>
-                    </>
-                )}
-
-
-
+            <div className="d-flex overflow-auto mb-3 justify-content-between border-bottom border-secondary">
+              <div>
+                {item.verdict === "Accepted" ?
+                  <h6 className="text-success m-0 green">Accepted</h6>
+                  :
+                  <h6 className="text-danger m-0">Wrong Answer</h6>
+                }
+                <p className="text-secondary">{new Date(item.timestamps).toLocaleString()}</p>
+              </div>
+              <h6 className="text-primary ms-5 ps-5">{item.lang}</h6>
 
             </div>
-        </div>
-    );
-}
+            <i onClick={() => { navigator.clipboard.writeText(item.code) }} class="fas fa-copy"></i>
+            <div className="border">
 
+              <textarea
+                value={item.code}
+                style={{
+                  height: 'calc(80vh - 200px)',
+                  width: '100%',
+                  fontFamily: 'Courier New, monospace',
+                  fontSize: '20px',
+                  padding: '10px',
+                  borderRadius: '5px',
+                  border: '1px solid #ccc',
+                  resize: 'vertical',
+                  backgroundColor: '#1e1e1e', // Set the background color
+                  color: '#dcdcdc', // Set the text color
+                }}
+              />
 
-export default Submission
+            </div>
+            <button className='btn btn-secondary me-4 lightgreen border-0 mt-2' onClick={() => handleClose()}>Close</button>
 
+          </Box>
+        </Modal>
 
+        {submission ? (
+          <table className="content-table">
+            <thead>
+              <tr>
+                <th>UserID</th>
+                <th>Language</th>
+                <th>Verdict</th>
+                <th>When</th>
+                <th>{`</>Submission`}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {submission.slice()
+                .reverse()
+                ?.map((i) => {
+                  return (
+                    <tr>
+                      <td>{i.userid}</td>
 
+                      {i.lang === "cpp" && <td>C++</td>}
+                      {i.lang === "java" && <td>Java</td>}
+                      {i.lang === "py" && <td>Python</td>}
+
+                      {i.verdict === "Wrong" && (
+                        <td
+                          style={{
+                            fontSize: "0.91em",
+                            color: "#ff0f1e",
+                            cursor: "pointer",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Wrong Answer
+                        </td>
+                      )}
+                      {i.verdict === "Accepted" && (
+                        <td
+                          style={{
+                            fontSize: "0.91em",
+                            color: "#07ac07",
+                            cursor: "pointer",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Accepted
+                        </td>
+                      )}
+
+                      <td>{calculateAgoTime(i.timestamps)}</td>
+                      <td><button className="btn-primary" onClick={() => handleOpen(i)}>Show code</button></td>
+
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text1">No Submission Found</p>
+        )}
+      </section>
+    </>
+  );
+};
+
+export default Submissions;
