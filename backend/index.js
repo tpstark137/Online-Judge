@@ -26,7 +26,7 @@ const secret = 'asdfe45we45w345wegw345werjktjwertkj';
 app.post('/register', async (req, res) => {
   const { username, email, password, cpassword, userid } = req.body;
   if (!username || !email || !password || !cpassword || !userid) {
-    return res.status(422).json({ error: "You are Missing some of the fields" });
+    res.status(422).json({ error: "Please fill all the required fields" });
   }
 
   try {
@@ -63,13 +63,12 @@ app.post('/login', async (req, res) => {
     const userDoc = await User.findOne({ email });
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
-      jwt.sign({ email, id: userDoc._id }, secret, {}, (err, token) => {
+      jwt.sign({ email, id: userDoc.userid }, secret, {}, (err, token) => {
         if (err) throw err;
         res.cookie('token', token).json({
-          id: userDoc._id,
+          id: userDoc.userid,
           email,
-          token: token,
-          message: "Logged in Successfully"
+          token: token
         });
       });
     } else {

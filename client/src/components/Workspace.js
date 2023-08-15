@@ -19,7 +19,7 @@ function Workspace() {
 
     let verdict = "";
 
-    const userid = JSON.parse(localStorage.getItem("user")).id;
+    const userid = JSON.parse(localStorage.getItem("user")).userid;
     const params = useParams()
     const callProblem = async () => {
         try {
@@ -182,11 +182,10 @@ function Workspace() {
                         </ul>
                         <div className="tab-content" id="pills-tabContent">
                             <div
-                                className="tab-pane fade show active p-3 hh"
+                                className="tab-pane fadeshow active p-3 hh"
                                 id="pills-home"
                                 role="tabpanel"
                                 aria-labelledby="pills-home-tab"
-                                tabIndex={0}
                             >
                                 <div className="d-flex justify-content-between align-items-center">
                                     <h5>{Q ? Q.sequence + ". " + Q.title : null}</h5>
@@ -194,9 +193,7 @@ function Workspace() {
                                     {Q ? <h5 className=" fw-semibold" style={{ color: Q.difficulty === "Easy" ? 'green' : Q.difficulty === "Medium" ? '#F49D1A' : "red" }}>{Q ? Q.difficulty : null}</h5> : null}
                                 </div>
                                 <hr />
-                                < div id="desc">
                                     <div className="content" dangerouslySetInnerHTML={{ __html: Q.description }} />
-                                </div>
                             </div>
                         </div>
 
@@ -227,10 +224,10 @@ function Workspace() {
                                 onChange={(e) => {
                                     setCode(e.target.value);
                                 }}
+                                spellCheck="false"
                                 value={code}
                                 style={{
                                     fontStyle: "normal",
-                                    spellcheck: "false",
                                     textDecoration: "none",
                                     height: 'calc(80vh - 200px)',
                                     width: '100%',

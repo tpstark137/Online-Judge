@@ -5,6 +5,8 @@ import { useNavigate, Link } from "react-router-dom";
 
 function Navbar() {
     const auth = localStorage.getItem("user");
+    // const[userid,setUserid]=useState("")
+    // setUserid(JSON.parse(localStorage.getItem("user")).userid);
     const navigate = useNavigate();
     const logout = () => {
         localStorage.clear();

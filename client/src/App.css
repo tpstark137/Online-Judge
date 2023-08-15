@@ -128,8 +128,8 @@ div.content li{
 }
 
 .content-table thead tr {
-  background-color: #17cf97;
-  color: #1b2430;
+  background-color: #620524;
+  color: #fff;
   text-align: left;
 }
 
@@ -147,7 +147,7 @@ div.content li{
 }
 
 .content-table tbody tr:last-of-type {
-  border-bottom: 3.5px solid #17cf97;
+  border-bottom: 3.5px solid #cf1736;
 }
 
 .content-table a {

@@ -7,7 +7,9 @@ import 'react-toastify/dist/ReactToastify.css';
 function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [name, setName] = useState("")
+    const[cpassword,setCpassword]=useState("")
+    const [username, setName] = useState("")
+    const [userid, setUserid] = useState("")
     const navigate=useNavigate();
     useEffect(()=>{
         const auth=localStorage.getItem("user");
@@ -18,9 +20,10 @@ function Login() {
     })
 
     const handleClick = async() => {
+        console.log({ username, email, password ,cpassword,userid});
         let result=await fetch('http://localhost:3000/register', {
             method: 'POST',
-            body: JSON.stringify({ name, email, password }),
+            body: JSON.stringify({ username, email, password ,cpassword,userid}),
             headers: {
                 "Content-Type": "application/json"
             },
@@ -48,9 +51,9 @@ function Login() {
                             <label >User Name</label>
                             <input
                                 onChange={(e) => setName(e.target.value)}
-                                type="email"
+                                type="text"
                                 className="form-control"
-                                name="email"
+                                name="username"
                             />
                         </div>
                         <div className="form-group">
@@ -69,6 +72,26 @@ function Login() {
                                 type="password"
                                 className="form-control"
                                 name="password"
+                            />
+                            <br />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Confirm Password</label>
+                            <input
+                                onChange={(e) => setCpassword(e.target.value)}
+                                type="password"
+                                className="form-control"
+                                name="password"
+                            />
+                            <br />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Set User Id</label>
+                            <input
+                                onChange={(e) => setUserid(e.target.value)}
+                                type="text"
+                                className="form-control"
+                                name="userid"
                             />
                             <br />
                         </div>

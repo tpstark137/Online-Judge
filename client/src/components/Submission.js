@@ -106,6 +106,7 @@ const Submissions = () => {
 
               <textarea
                 value={item.code}
+                spellCheck="false"
                 style={{
                   height: 'calc(80vh - 200px)',
                   width: '100%',
@@ -149,7 +150,7 @@ const Submissions = () => {
                       {i.lang === "java" && <td>Java</td>}
                       {i.lang === "py" && <td>Python</td>}
 
-                      {i.verdict === "Wrong" && (
+                      {i.verdict ==="Wrong Answer" && (
                         <td
                           style={{
                             fontSize: "0.91em",
