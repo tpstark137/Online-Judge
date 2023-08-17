@@ -4,7 +4,7 @@ const compile =  async (data)=>{
 
   try {
     const res = await axios
-      .post("http://localhost:3000/code",data)
+      .post("http://localhost:5000/code",data)
       console.log(res.data)
     return (res.data)
   } catch(err) {

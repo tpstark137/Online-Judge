@@ -15,7 +15,7 @@ function Login() {
   })
 
   const handleClick = async () => {
-    let result = await fetch('http://localhost:3000/login', {
+    let result = await fetch('http://localhost:5000/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
       headers: {

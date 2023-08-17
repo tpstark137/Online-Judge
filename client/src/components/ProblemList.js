@@ -9,7 +9,7 @@ function ProblemList() {
 
   const callProblemList = async () => {
     try {
-      let result = await fetch('http://localhost:3000/questions', {
+      let result = await fetch('http://localhost:5000/questions', {
         method: 'GET',
         headers: {
           "Content-Type": "application/json"

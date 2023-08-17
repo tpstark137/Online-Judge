@@ -50,7 +50,7 @@ const AddQuestion = () => {
             input: input,
             output: output
         }
-        await axios.post('http://localhost:3000/questions', data).then((D) => {
+        await axios.post('http://localhost:5000/questions', data).then((D) => {
             nav('/')
         }).catch((D) => {
             console.log(D)

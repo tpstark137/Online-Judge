@@ -21,7 +21,7 @@ function Login() {
 
     const handleClick = async() => {
         console.log({ username, email, password ,cpassword,userid});
-        let result=await fetch('http://localhost:3000/register', {
+        let result=await fetch('http://localhost:5000/register', {
             method: 'POST',
             body: JSON.stringify({ username, email, password ,cpassword,userid}),
             headers: {

@@ -3,7 +3,7 @@ const getSubmission =  async (data)=>{
 
   try {
     const res = await axios
-      .get("http://localhost:3000/submition/"+data.q)
+      .get("http://localhost:5000/submition/"+data.q)
       console.log(res)
     return (res.data)
   } catch(err) {
